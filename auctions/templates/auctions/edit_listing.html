@@ -1,0 +1,108 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container my-5">
+    <h2 class="mb-4">Edit Auction: {{ auction.title }}</h2>
+
+
+    <form action="{% url 'auctions:edit_auction' auction_id=auction.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group mb-4">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Title:</label>
+            {{ form.title }}
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Description:</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="{{ form.category.id_for_label }}" class="form-label">Category:</label>
+            {{ form.category }}
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="{{ form.image_url.id_for_label }}" class="form-label">Image URL:</label>
+            {{ form.image_url }}
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="{{ form.supporting_link.id_for_label }}" class="form-label">Supporting Link:</label>
+            {{ form.supporting_link }}
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="{{ form.supporting_link_description.id_for_label }}" class="form-label">Supporting Link Description:</label>
+            {{ form.supporting_link_description }}
+        </div>
+
+        <div class="form-group mb-5">
+            <label for="{{ form.images.id_for_label }}" class="form-label">Add New Images:</label>
+            {{ form.images }}
+            <div id="imageFileList" class="mt-2"></div>
+        </div>
+
+        {% if auction.images.all %}
+        <div class="form-group mb-5">
+            <h6 class="mb-3">Current Images:</h6>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for image in auction.images.all %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="embed-responsive embed-responsive-1by1">
+                                <img src="{{ image.image.url }}" class="card-img-top img-fluid embed-responsive-item" alt="Auction image" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px;">
+                            </div>
+                            <div class="form-check mt-3">
+                                <input type="checkbox" class="form-check-input" name="delete_images" value="{{ image.id }}" id="delete_image_{{ image.id }}">
+                                <label class="form-check-label" for="delete_image_{{ image.id }}">Delete this image</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group mb-5">
+            <label for="{{ form.videos.id_for_label }}" class="form-label">Add New Videos:</label>
+            {{ form.videos }}
+            <div id="videoFileList" class="mt-2"></div>
+        </div>
+
+        {% if auction.videos.all %}
+        <div class="form-group mb-5">
+            <h6 class="mb-3">Current Videos:</h6>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for video in auction.videos.all %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <video class="embed-responsive-item" controls style="width: 100%; height: 300px; object-fit: cover;">
+                                    <source src="{{ video.video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="form-check mt-3">
+                                <input type="checkbox" class="form-check-input" name="delete_videos" value="{{ video.id }}" id="delete_video_{{ video.id }}">
+                                <label class="form-check-label" for="delete_video_{{ video.id }}">Delete this video</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group d-flex justify-content-start mt-5 mb-5">
+            <input type="submit" class="btn btn-primary me-2" value="Save Changes">
+            <a href="{% url 'auctions:listing_page' auction_id=auction.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

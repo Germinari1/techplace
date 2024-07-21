@@ -1,0 +1,221 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<script>
+    Fancybox.bind("[data-fancybox]", {
+        // Custom options
+        animationEffect: "zoom",
+        transitionEffect: "fade",
+        loop: true,
+        buttons: [
+            "zoom",
+            "slideShow",
+            "fullScreen",
+            "thumbs",
+            "close"
+        ],
+        idleTime: 3,
+        protect: true,
+        wheelToPan: true,
+        clickContent: "zoom",
+        clickSlide: "close",
+        dragToClose: false,
+        afterShow: function(instance, current) {
+            console.log('Fancybox opened');
+        }
+    });
+</script>
+
+<div class="listing-page-main-btn">
+    <!-- --- Watchlist button --- -->
+    {% if user.is_authenticated and user.id != auction.seller.id %}
+    <form action="{% url 'auctions:watchlist' %}" method="POST">
+        {% csrf_token %}
+        {% if on_watchlist %}
+            <input type="submit" class="btn btn-danger" value="Remove from watchlist">
+            <input type="hidden" name="on_watchlist" value="True">
+        {% else %}
+            <input type="submit" class="btn btn-success" value="Add to watchlist">
+            <input type="hidden" name="on_watchlist" value="False">
+        {% endif %}
+
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="auction_id" value="{{ auction.id }}">
+    </form>
+    {% endif %}
+    <!-- --- Close auction button --- -->
+    {% if user.id == auction.seller.id %}
+    <div style="display: flex; gap: 10px;">
+        <form action="{% url 'auctions:close_auction' auction_id=auction.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="Close offer" name="close_auction">
+        </form>
+        <form action="{% url 'auctions:edit_auction' auction_id=auction.id %}" method="GET">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-warning" value="Edit offer" name="edit_auction">
+        </form>
+    </div>
+{% endif %}
+</div>
+
+<div class="auction-title">
+    <h2>{{auction.title}}</h2>
+</div>
+
+<!-- --- Auction Description --- -->
+<div class="card mb-3">
+{% if auction.image_url %}
+    <div class="listing-page-img-wrapper m-4">
+        <a href="{{ auction.image_url }}" data-fancybox="main-image" data-caption="{{ auction.title }}">
+            <div class="embed-responsive embed-responsive-16by9">
+                <img src="{{ auction.image_url }}" class="card-img-top listing-page-img embed-responsive-item" alt="{{ auction.title }} photo" style="width: 100%; height: 500px; object-fit: cover; border-radius: 10px;">
+            </div>
+        </a>
+    </div>
+{% endif %}
+
+
+
+    <div class="card-body mb-3">
+        <h4 class="card-title">Description:</h4>
+        <p class="card-text">{{auction.description}}</p>
+        <p class="card-text"><small class="text-muted">Created on: {{auction.publication_date}}</small></p>
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <div class="list-group-item">Current Price <strong>{{auction.current_price}} $ </strong></div>
+
+        <!-- --- Bid info and form --- -->
+        <div class="list-group-item text-muted">
+            {% if bid_amount != 0 %}
+                <small>{{ bid_amount }} bid(s) so far. {{ bid_message }}</small>
+            {% else %}
+                <small>No bids so far.</small>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated and user.id != auction.seller.id %}
+            <form action="{% url 'auctions:bid' %}" method="POST" class="list-group-item">
+                {% csrf_token %}
+                <!-- <input type="number" name="bid" placeholder="Bid" step="0.01"> -->
+                <div class="form-group row">
+                    <div class="col-sm-10 col-8">
+                        {{ bid_form }}
+                    </div>
+                    <input type="submit" value="Place Bid" class="btn btn-primary btn-new-blue col-sm-2 col-4">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                </div>
+            </form>
+        {% endif %}
+    </ul>
+</div>
+
+<!-- --- Detail --- -->
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Details</h4>
+        <ul>
+            <li><strong>Seller: </strong><a href="{% url 'auctions:user_profile' auction.seller.username %}">{{ auction.seller.username }}</a></li>
+            <li><strong>Category:</strong> {{auction.get_category_display}}</li>
+        </ul>
+    </div>
+
+    
+    {% if auction.images.all %}
+    <div class="card-body mb-3">
+        <h4>Extra material and demos</h4>
+        <h6 class="card-title">Additional Images:</h6>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for image in auction.images.all %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <a href="{{ image.image.url }}" data-fancybox="gallery" data-caption="{{ image.caption|default:'' }}">
+                                <div class="embed-responsive embed-responsive-1by1">
+                                    <img src="{{ image.image.url }}" class="card-img-top img-fluid embed-responsive-item" alt="Additional image" style="width: 100%; height: 300px; object-fit: cover; border-radius: 10px;">
+                                </div>
+                            </a>
+                            {% if image.caption %}
+                                <p class="card-text text-muted mt-2">{{ image.caption }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{% if auction.videos.all %}
+    <div class="card-body mb-3">
+        <h6 class="card-title">Videos:</h6>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for video in auction.videos.all %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="embed-responsive embed-responsive-1by1">
+                                <video class="embed-responsive-item" controls style="width: 100%; height: 600px; object-fit: cover;">
+                                    <source src="{{ video.video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            {% if video.caption %}
+                                <p class="card-text text-muted mt-2">{{ video.caption }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+
+</div>
+
+<!-- --- Supporting material --- -->
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Supporting Material</h4>
+        <ul>
+            <li><strong>Supporting link:</strong><a href="{{auction.supporting_link}}"> {{auction.supporting_link}}</a></li>
+            <li><strong>What the seller has to say about the link above:</strong> {{auction.supporting_link_description}}</li>
+        </ul>
+    </div>
+</div>
+
+<!-- --- Comments --- -->
+<div class="card" style="margin-bottom: 3rem;">
+    <div class="card-body">
+        <h4 class="card-title">Comments</h4>
+        <p class="card-text">
+            <div class="comment-section mb-4">
+                {% for comment in comments %}
+                    <div class="single-comment mb-3">
+                        <div class="comment-text">
+                            {{ comment.comment }}    
+                        </div>
+                        <div class="comment-author">
+                            ~ {{ comment.user.username }}
+                        </div>
+                        <small>{{ comment.comment_date }}</small>
+                    </div>
+                {% empty %}
+                    <div class="no-comment">
+                        No comments yet
+                    </div>
+                {% endfor %}
+            </div>
+            <form action="{% url 'auctions:handle_comment' auction_id=auction.id %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-2">
+                    {{ comment_form }}
+                </div>
+                <input type="submit" value="Comment" class="btn btn-primary btn-new-blue" style="float: right;">
+            </form>
+        </p>
+    </div>
+</div>
+{% endblock %}

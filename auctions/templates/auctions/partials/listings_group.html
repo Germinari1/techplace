@@ -1,0 +1,13 @@
+<div class="sub-title">
+    {{ sub_title }}
+</div>
+
+<div class="container ">
+    <div class="row row-cols-auto">
+        {% for auction in auctions %}
+            {% include "auctions/partials/listing_layout.html" %}
+        {% empty %}
+            Nothing to see here... yet.
+        {% endfor %}
+    </div>
+</div>    

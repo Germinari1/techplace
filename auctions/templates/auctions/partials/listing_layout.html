@@ -1,0 +1,43 @@
+
+<div class="card auction-item mb-4 shadow">
+    <a href="{% url 'auctions:listing_page' auction_id=auction.id %}">
+    {% if auction.image_url %}
+        <div class="card-image-wrapper">
+            <img class="card-img-top listing-img" src="{{ auction.image_url }}" alt="{{ auction.title }} photo">
+        </div>
+    {% endif %}
+        <div class="card-body">
+            <h5 class="card-title"> {{ auction.title }} </h5>
+            <div>
+                <strong>Price:</strong> {{auction.current_price}} $
+            </div>
+            <div class="mb-2">
+                <strong>Category:</strong> {{auction.get_category_display}}
+            </div>
+            <div class="auction-list-date">
+                {{auction.publication_date}}
+            </div>
+
+            {% if auction.closed and user.is_authenticated and auction.seller == user%}
+                <div class="card-footer bg-transparent border-0 text-end">
+                    <a href="{% url 'auctions:delete_auction' auction_id=auction.id %}" id="deleteButton" class="btn btn-danger btn-sm" style="color: aliceblue;">Delete offer</a>
+                </div>
+            {% endif %}
+
+        </div>
+    </a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var deleteButton = document.getElementById('deleteButton');
+        if (deleteButton) {
+            deleteButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to delete this auction?')) {
+                    window.location.href = this.href;
+                }
+            });
+        }
+    });
+</script>

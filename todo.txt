@@ -1,0 +1,16 @@
+- idea: marketplace (auction-like) for software and tech-related solutions
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+FEATURES
+
+- chat system
+
+- filter/searching system
+
+- refactor:
+    - turn categories into class
+    - [?] turn link into class 
+
+- [?] allow user to write descriptions and bios (etc) in markdown and have it displayed in formatted html?
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+BUGS

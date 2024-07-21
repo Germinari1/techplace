@@ -1,0 +1,223 @@
+{% load static %}
+
+{% url 'auctions:index' as index %}
+{% url 'auctions:categories' category='AI' as ai %}
+{% url 'auctions:categories' category='OTH' as other %}
+{% url 'auctions:categories' category='WEB' as web_dev %}
+{% url 'auctions:categories' category='MOB' as mobile_dev %}
+{% url 'auctions:categories' category='DAT' as data_science %}
+{% url 'auctions:categories' category='CLD' as cloud_computing %}
+{% url 'auctions:categories' category='SEC' as cybersecurity %}
+{% url 'auctions:categories' category='DEV' as devops %}
+{% url 'auctions:categories' category='GAM' as game_dev %}
+{% url 'auctions:categories' category='IOT' as iot %}
+{% url 'auctions:categories' category='BLC' as blockchain %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}TechPlace{% endblock %}</title>
+    <link rel="icon" href="auctions/static/auctions/img/dollar_sign.jpg" type = "image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7faee5c6e1.js" crossorigin="anonymous"></script>
+    <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'auctions/sidebar.css' %}" rel="stylesheet">
+    <script defer src="{% static 'auctions/sidebar.js' %}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script defer src="{% static 'auctions/fileHandling.js' %}"></script>
+    <script src="auctions/static/auctions/fileHandling.js"></script>
+</head>
+
+<body>
+    <body id="body-pd">
+        <!-- Sidebar -->
+        <header class="header" id="header">
+            <div class="header_toggle">
+                <i class='fas fa-angle-right' id="header-toggle"></i>
+            </div>
+            <div class="nav-buttons">
+                {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:user_profile' user.username %}">Your profile</a>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:user_panel' %}">User Dashbooard</a>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:create_listing' %}">Create Offering</a>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:watchlist' %}">Your Watchlist</a>
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                        <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:login' %}">Log In</a>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-new-blue">
+                        <a class="nav-link" href="{% url 'auctions:register' %}">Register</a>
+                    </button>
+                {% endif %}
+            </div>
+        </header>
+        <div class="l-navbar" id="nav-bar">
+            <nav class="nav">
+                <div> 
+                    <div class="nav_logo hide-inner">
+                        <span class="nav_categories">Categories</span>
+                    </div>
+                    <div class="nav_list">
+                        <a href="{{ index }}" class="nav_link {% if request.path == index %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-border-all" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                                <line x1="4" y1="12" x2="20" y2="12"></line>
+                                <line x1="12" y1="4" x2="12" y2="20"></line>
+                            </svg>
+                            <span class="nav_name">All</span> 
+                        </a>
+                        <a href="{{ ai }}" class="nav_link {% if request.path == ai %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brain" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8"></path>
+                                <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8"></path>
+                                <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5"></path>
+                                <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0"></path>
+                                <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5"></path>
+                                <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10"></path>
+                            </svg>
+                            <span class="nav_name">AI</span> 
+                        </a>
+                        <a href="{{ web_dev }}" class="nav_link {% if request.path == web_dev %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-world-www" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4"></path>
+                                <path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4"></path>
+                                <path d="M12.5 3a16.989 16.989 0 0 1 1.828 4"></path>
+                                <path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4"></path>
+                                <path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4"></path>
+                                <path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4"></path>
+                                <path d="M2 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                                <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                                <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                            </svg>
+                            <span class="nav_name">Web Development</span> 
+                        </a>
+                        <a href="{{ mobile_dev }}" class="nav_link {% if request.path == mobile_dev %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-mobile" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <rect x="7" y="4" width="10" height="16" rx="1"></rect>
+                                <line x1="11" y1="5" x2="13" y2="5"></line>
+                                <line x1="12" y1="17" x2="12" y2="17.01"></line>
+                            </svg>
+                            <span class="nav_name">Mobile Development</span> 
+                        </a>
+                        <a href="{{ data_science }}" class="nav_link {% if request.path == data_science %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M3 3v18h18"></path>
+                                <circle cx="9" cy="9" r="2"></circle>
+                                <circle cx="19" cy="7" r="2"></circle>
+                                <circle cx="14" cy="15" r="2"></circle>
+                                <line x1="10.16" y1="10.62" x2="12.5" y2="13.5"></line>
+                                <path d="M15.088 13.328l2.837 -4.586"></path>
+                            </svg>
+                            <span class="nav_name">Data Science & Analytics</span> 
+                        </a>
+                        <a href="{{ cloud_computing }}" class="nav_link {% if request.path == cloud_computing %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cloud" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-12"></path>
+                            </svg>
+                            <span class="nav_name">Cloud Computing</span> 
+                        </a>
+                        <a href="{{ cybersecurity }}" class="nav_link {% if request.path == cybersecurity %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shield-lock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"></path>
+                                <circle cx="12" cy="11" r="1"></circle>
+                                <line x1="12" y1="12" x2="12" y2="14.5"></line>
+                            </svg>
+                            <span class="nav_name">Cybersecurity</span> 
+                        </a>
+                        <a href="{{ devops }}" class="nav_link {% if request.path == devops %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-refresh" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                            </svg>
+                            <span class="nav_name">DevOps</span> 
+                        </a>
+                        <a href="{{ game_dev }}" class="nav_link {% if request.path == game_dev %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-gamepad" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                <path d="M6 12h4m-2 -2v4"></path>
+                                <line x1="15" y1="11" x2="15" y2="11.01"></line>
+                                <line x1="18" y1="13" x2="18" y2="13.01"></line>
+                            </svg>
+                            <span class="nav_name">Game Development</span> 
+                        </a>
+                        <a href="{{ iot }}" class="nav_link {% if request.path == iot %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                <path d="M9.172 15.172a4 4 0 0 1 5.656 0"></path>
+                                <path d="M6.343 12.343a8 8 0 0 1 11.314 0"></path>
+                                <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0"></path>
+                            </svg>
+                            <span class="nav_name">Internet of Things</span> 
+                        </a>
+                        <a href="{{ blockchain }}" class="nav_link {% if request.path == blockchain %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-box" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                                <line x1="12" y1="12" x2="20" y2="7.5"></line>
+                                <line x1="12" y1="12" x2="12" y2="21"></line>
+                                <line x1="12" y1="12" x2="4" y2="7.5"></line>
+                            </svg>
+                            <span class="nav_name">Blockchain</span> 
+                        </a>
+                        <a href="{{ other }}" class="nav_link {% if request.path == other %} active {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dots" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <circle cx="5" cy="12" r="1"></circle>
+                                <circle cx="12" cy="12" r="1"></circle>
+                                <circle cx="19" cy="12" r="1"></circle>
+                            </svg>
+                            <span class="nav_name">Other</span> 
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div>
+            <div class="main-title">TechPlace_</div>
+            {% if user.is_authenticated %}
+            Logged in as <strong>{{ user.username }}</strong>
+            {% endif %}
+            <hr>
+        </div>
+        <div class="height-100 bg-light">
+            {% block body %}
+            {% endblock %}
+        </div>
+
+        
+    </body>
+
+</html>
