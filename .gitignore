@@ -1,0 +1,13 @@
+# Ignore SQLite database
+*.sqlite3
+
+# Ignore todo.txt file
+todo.txt
+
+# Ignore contents of media/auction_images and media/auction_videos
+media/auction_images/*
+media/auction_videos/*
+
+# Don't ignore the directories themselves
+!media/auction_images/.gitkeep
+!media/auction_videos/.gitkeep

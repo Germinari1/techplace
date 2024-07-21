@@ -9,6 +9,7 @@ FEATURES
 - refactor:
     - turn categories into class
     - [?] turn link into class 
+    - use templates to display categories
 
 - [?] allow user to write descriptions and bios (etc) in markdown and have it displayed in formatted html?
 
